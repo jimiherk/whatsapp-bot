@@ -23,9 +23,15 @@ client.on('qr', qr => {
 client.on('message_create', async msg => {
     console.log(`${Date.now()}: Message by ${msg.from}: ${msg.body}`);
 
-    if ((await msg.getChat()).isGroup || msg.fromMe) return;
+    let chat = await msg.getChat();
 
-    if (allowed.texters.includes(msg.from)) return;
+    let [ prevMsg ] = await chat.fetchMessages({ limit: 1, fromMe: true });
+
+    if (
+        (chat.isGroup || msg.fromMe) ||
+        (prevMsg.timestamp - new Date().getTime() < 3 * 60 * 60) ||
+        (allowed.texters.includes(msg.from))
+    ) return;
 
     await msg.react('💬');
 });
