@@ -177,3 +177,4 @@ dist
 # WWEBJS Files
 .wwebjs_cache/
 .wwebjs_auth/
+allowed/
